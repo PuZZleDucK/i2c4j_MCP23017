@@ -31,67 +31,40 @@ public class LinearLedDisplay{ //pin mappings.
   public static void main(String args[]) throws Exception{
     System.out.println(" :: i2c Test :: ");
 
-        try {
-            bus = I2CFactory.getInstance(I2CBus.BUS_1);
-            System.out.println(" :: Got BUS");
-            i2cIO = bus.getDevice(address);
-            System.out.println(" :: Got Device");
-            Thread.sleep(500);
-//            i2cIO.write(0x12, (byte)0x0);//pin 1 on port a
-//            i2cIO.write(0x13, (byte)0x0);//pin 1 on port b
-            i2cIO.write(0x00, (byte)0x00);//clear for output
-
-
-//            i2cIO.write(0x09, (byte)0x0F);//bank a .. all? on xf
-            i2cIO.write(0x12, (byte)0xFF);// bank1, all on
-//now turn it off you fool!!!
-for(int dummy = 0; dummy < 1; dummy = dummy) {
-for(int x = 1; x < 256; x=x+x) {
+    try {
+        bus = I2CFactory.getInstance(I2CBus.BUS_1);
+        System.out.println(" :: Got BUS");
+        i2cIO = bus.getDevice(address);
+        System.out.println(" :: Got Device");
+        Thread.sleep(500);
+        i2cIO.write(0x00, (byte)0x00);//clear for output
+        i2cIO.write(0x12, (byte)0xFF);// bank1, all on
+        Thread.sleep(500);
+        i2cIO.write(0x12, (byte)0x00);// bank1, all off
+        Thread.sleep(500);
+        for(int dummy = 0; dummy < 1; dummy = dummy) { //infinine LEDs
+          for(int x = 1; x < 256; x=x+x) {
             System.out.println(" ::       now:" + x);
             Thread.sleep(200);
             i2cIO.write(0x12, (byte)x);//latch a .. on/all
-}
-for(int x = 256; x > 0; x=x/2) {
+          }
+          for(int x = 256; x > 0; x=x/2) {
             System.out.println(" ::       now:" + x);
             Thread.sleep(200);
             i2cIO.write(0x12, (byte)x);//latch a .. on/all
-}
-Thread.sleep(200);
-i2cIO.write(0x12, (byte)0);//latch a .. on/all
-
-}
-            Thread.sleep(1500);
-            i2cIO.write(0x12, (byte)0x00);//latch a .. on/all
-
-
-            Thread.sleep(500);
-            System.out.println(" ::   wrote a1");
-
-
-/*
-//for python: readandchangepin(MCP23017_GPIOA, pin, value, self.i2c.readU8(MCP23017_OLATA))
-//for j: readandchangepin(MCP23017_GPIOA, pin, value, self.i2c.readU8(MCP23017_OLATA))
-MCP23017_IODIRA = 0x00
-MCP23017_IODIRB = 0x01
-MCP23017_GPIOA = 0x12
-MCP23017_GPIOB = 0x13
-MCP23017_GPPUA = 0x0C
-MCP23017_GPPUB = 0x0D
-MCP23017_OLATA = 0x14
-MCP23017_OLATB = 0x15
-MCP23008_GPIOA = 0x09
-MCP23008_GPPUA = 0x06
-MCP23008_OLATA = 0x0A
-*/
-
-        } catch (Exception e) {
-            System.out.println("Exception: " + e.getMessage());
+         }
+         Thread.sleep(200);
+         i2cIO.write(0x12, (byte)0);//latch a .. on/all
         }
-            System.out.println("Connected to bus OK!!!");
-
-
-
-
+        //now turn it off you fool!!!
+        Thread.sleep(1500);
+        i2cIO.write(0x12, (byte)0x00);//latch a .. on/all
+        Thread.sleep(500);
+        System.out.println(" ::   wrote a1");
+    } catch (Exception e) {
+        System.out.println("Exception: " + e.getMessage());
+    }
+    System.out.println("Connected to bus OK!!!");
     LinearLedDisplay lld = new LinearLedDisplay(21);
     Thread.sleep(2000); // suspense...
     lld.demo();
@@ -110,10 +83,6 @@ MCP23008_OLATA = 0x0A
       Thread.sleep(endDelay);
     }
     
-
-//cron schedules & make
-
-
     ad.shutdown();
   }
 
@@ -142,7 +111,8 @@ MCP23008_OLATA = 0x0A
     for(AbstractPin thisPin : ad.getLEDs()) {
       adRev.addPinRev(thisPin);
     }
-  }
 
-}
+// AND NOW I2C Pins :D ... todo
+  }//lld
+}//class
 
