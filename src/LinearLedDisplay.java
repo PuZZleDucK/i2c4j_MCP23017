@@ -41,26 +41,6 @@ public class LinearLedDisplay{ //pin mappings.
 //            i2cIO.write(0x13, (byte)0x0);//pin 1 on port b
             i2cIO.write(0x00, (byte)0x00);//clear for output
 
-byte pinA0 = 0x01;
-byte pinA1 = 0x02;
-byte pinA2 = 0x04;
-byte pinA3 = 0x08;
-byte pinA4 = 0x10;
-byte pinA5 = 0x20;
-byte pinA6 = 0x40;
-byte pinA7 = 0x80;
-
-byte pinB0 = 0x01;
-byte pinB1 = 0x02;
-byte pinB2 = 0x04;
-byte pinB3 = 0x08;
-byte pinB4 = 0x10;
-byte pinB5 = 0x20;
-byte pinB6 = 0x40;
-byte pinB7 = 0x80;
-
-byte[] bankA = {pinA0, pinA1, pinA2, pinA3, pinA4, pinA5, pinA6, pinA7};
-byte[] bankB = {pinB0, pinB1, pinB2, pinB3, pinB4, pinB5, pinB6, pinB7};
 
 //            i2cIO.write(0x09, (byte)0x0F);//bank a .. all? on xf
             i2cIO.write(0x12, (byte)0xFF);// bank1, all on
