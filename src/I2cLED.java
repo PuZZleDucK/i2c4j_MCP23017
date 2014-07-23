@@ -14,11 +14,9 @@ import java.util.*;
 import java.time.*;
 
 public class I2cLED implements AbstractPin{
-  private GpioPinDigitalOutput thisPin;
 
-  private static final int i2cBus = 1;
   private static final int address = 0x20;
-  private static I2CBus bus;
+  private static I2CDevice i2cIO;
 
   private static byte bankDirA = 0x00;
   private static byte bankDirB = 0x01;
@@ -43,13 +41,17 @@ public class I2cLED implements AbstractPin{
   private static byte pinB6 = 0x40;
   private static byte pinB7 = 0x80;
 
-  byte[] bankA = {pinA0, pinA1, pinA2, pinA3, pinA4, pinA5, pinA6, pinA7};
-  byte[] bankB = {pinB0, pinB1, pinB2, pinB3, pinB4, pinB5, pinB6, pinB7};
-  
+  private static byte[] bankA = {pinA0, pinA1, pinA2, pinA3, pinA4, pinA5, pinA6, pinA7};
+  private static byte[] bankB = {pinB0, pinB1, pinB2, pinB3, pinB4, pinB5, pinB6, pinB7};
 
   private byte thisPin;
 
   public I2cLED(int pinNumber) {
+
+    //int i2cBus = 1;//used?
+    I2CBus bus = I2CFactory.getInstance(I2CBus.BUS_1);
+    i2cIO = bus.getDevice(address);
+    System.out.print(" :: ");
 //    GpioController gpio = GpioFactory.getInstance();
 //    thisPin = gpio.provisionDigitalOutputPin(newPin, "auto", PinState.LOW);
 //    thisPin.setShutdownOptions(true, PinState.LOW, PinPullResistance.OFF);
@@ -64,7 +66,6 @@ public class I2cLED implements AbstractPin{
   }
 
   public void pulsePin(int duration, int pulseDelay) {
-//    currentState = true;
     if(thisPin <= pinA7) {
       i2cIO.write(GpioA, bankA[thisPin]);// bank A
     } else {
