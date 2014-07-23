@@ -45,7 +45,7 @@ public class I2cLED implements AbstractPin{
 
   byte[] bankA = {pinA0, pinA1, pinA2, pinA3, pinA4, pinA5, pinA6, pinA7};
   byte[] bankB = {pinB0, pinB1, pinB2, pinB3, pinB4, pinB5, pinB6, pinB7};
-
+  
 
   private byte thisPin;
 
@@ -57,21 +57,18 @@ public class I2cLED implements AbstractPin{
     if( pinNumber < 8) {
       thisPin = pinNumber;
       i2cIO.write(bankDirA, bankA[thisPin]);//clear for output;
-//        i2cIO.write(0x00, (byte)0x00);//clear for output
-//        i2cIO.write(0x12, (byte)0xFF);// bank1, all on
     } else {
       thisPin = (pinNumber-8);
       i2cIO.write(bankDirB, bankB[thisPin]);
-//      i2cIO.write(0x01, bankB[thisPin]);
     }
   }
 
   public void pulsePin(int duration, int pulseDelay) {
 //    currentState = true;
     if(thisPin <= pinA7) {
-      i2cIO.write(GpioA, bankA[thisPin]);// bankA
+      i2cIO.write(GpioA, bankA[0x0]);// all shutdown for now
     } else {
-      i2cIO.write(GpioB, bankB[thisPin]);
+      i2cIO.write(GpioB, bankB[0x0]);
     }
 
     Instant changeBack = Instant.now().plusNanos(duration);
