@@ -30,8 +30,10 @@ public class LinearLedDisplay{ //pin mappings.
 
   public static void main(String args[]) throws Exception{
     System.out.println(" :: i2c Test :: ");
+/*
 
     try {
+
         bus = I2CFactory.getInstance(I2CBus.BUS_1);
         System.out.println(" :: Got BUS");
         i2cIO = bus.getDevice(address);
@@ -65,6 +67,7 @@ public class LinearLedDisplay{ //pin mappings.
         System.out.println("Exception: " + e.getMessage());
     }
     System.out.println("Connected to bus OK!!!");
+*/
     LinearLedDisplay lld = new LinearLedDisplay(21);
     Thread.sleep(2000); // suspense...
     lld.demo();
@@ -111,7 +114,8 @@ public class LinearLedDisplay{ //pin mappings.
     ad.addPin(new I2cLED(1));
     ad.addPin(new I2cLED(2));
     ad.addPin(new I2cLED(3));
-
+    System.out.print(" :: SPI LEDs Added :: ");
+  
 
     adRev = new AbstractDisplay();
     for(AbstractPin thisPin : ad.getLEDs()) {
