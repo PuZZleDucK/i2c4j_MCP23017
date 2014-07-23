@@ -107,10 +107,17 @@ public class LinearLedDisplay{ //pin mappings.
       System.out.print(x+".");
     }
     System.out.print("\b] :: \n");
+    ad.addPin(new I2cLED(0));
+    ad.addPin(new I2cLED(1));
+    ad.addPin(new I2cLED(2));
+    ad.addPin(new I2cLED(3));
+
+
     adRev = new AbstractDisplay();
     for(AbstractPin thisPin : ad.getLEDs()) {
       adRev.addPinRev(thisPin);
     }
+
 
 // AND NOW I2C Pins :D ... todo
   }//lld
