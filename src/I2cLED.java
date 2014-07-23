@@ -44,6 +44,7 @@ public class I2cLED implements AbstractPin{
   private static byte[] bankB = {pinB0, pinB1, pinB2, pinB3, pinB4, pinB5, pinB6, pinB7};
 
   private byte thisPin;
+  private boolean isBankA;
   private I2CDevice i2cIO;
   private I2CBus bus;
 
@@ -61,14 +62,13 @@ public class I2cLED implements AbstractPin{
 
 
       if( pinNumber < 8) {
+        isBankA = true;
         thisPin = (byte)pinNumber;
-        i2cIO.write(bankDirA, (byte)0x0);//clear for output; oposite this ->bankA[thisPin]
-        i2cIO.write(GpioA, bankA[thisPin]);//demo;
-        Thread.sleep(500);
-        i2cIO.write(GpioA, (byte)0x0);//demo;
+        i2cIO.write(bankDirA, (byte)0x0);// 0 for out; not this ->bankA[thisPin]
       } else {
+        isBankA = false;
         thisPin = (byte)(pinNumber-8);
-        i2cIO.write(bankDirB, bankB[thisPin]);
+        i2cIO.write(bankDirB, (byte)0x0);
       }
     } catch (Exception e) {
         System.out.println("Exception: " + e.getMessage());
@@ -78,10 +78,7 @@ public class I2cLED implements AbstractPin{
 
   public void pulsePin(int duration, int pulseDelay) {
     try{ 
-      bus = I2CFactory.getInstance(I2CBus.BUS_1);
-      i2cIO = bus.getDevice(address);
-      System.out.println(" :: "+thisPin+">>>>"+GpioA+"<<<<"+i2cIO);
-      if(thisPin < 8) {
+      if(isBankA) {
         i2cIO.write(GpioA, bankA[thisPin]);// bank A
       } else {
         i2cIO.write(GpioB, bankB[thisPin]);
@@ -106,9 +103,7 @@ public class I2cLED implements AbstractPin{
     public void run() {
       System.out.println("<-- event");
       try{ 
-        bus = I2CFactory.getInstance(I2CBus.BUS_1);
-        i2cIO = bus.getDevice(address);
-        if(thisPin <= pinA7) {
+        if(isBankA) {
           i2cIO.write(GpioA, (byte)0x0);// hack off for now
         } else {
           i2cIO.write(GpioB, (byte)0x0);
