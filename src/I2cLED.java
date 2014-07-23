@@ -45,12 +45,13 @@ public class I2cLED implements AbstractPin{
 
   private byte thisPin;
   private I2CDevice i2cIO;
+  private I2CBus bus;
 
   public I2cLED(int pinNumber) {
 
     try {
-      I2CBus bus = I2CFactory.getInstance(I2CBus.BUS_1);
-      I2CDevice i2cIO = bus.getDevice(address);
+      bus = I2CFactory.getInstance(I2CBus.BUS_1);
+      i2cIO = bus.getDevice(address);
       System.out.print(" :: "+bus+i2cIO);
 //    GpioController gpio = GpioFactory.getInstance();
 //    thisPin = gpio.provisionDigitalOutputPin(newPin, "auto", PinState.LOW);
@@ -77,10 +78,10 @@ public class I2cLED implements AbstractPin{
 
   public void pulsePin(int duration, int pulseDelay) {
     try{ 
-//      I2CBus bus = I2CFactory.getInstance(I2CBus.BUS_1);
-//      i2cIO = bus.getDevice(address);
+      bus = I2CFactory.getInstance(I2CBus.BUS_1);
+      i2cIO = bus.getDevice(address);
       System.out.println(" :: "+thisPin+">>>>"+GpioA+"<<<<"+i2cIO);
-      if(thisPin <= pinA7) {
+      if(thisPin < 8) {
         i2cIO.write(GpioA, bankA[thisPin]);// bank A
       } else {
         i2cIO.write(GpioB, bankB[thisPin]);
@@ -105,8 +106,8 @@ public class I2cLED implements AbstractPin{
     public void run() {
       System.out.println("<-- event");
       try{ 
-//        I2CBus bus = I2CFactory.getInstance(I2CBus.BUS_1);
-//        I2CDevice i2cIO = bus.getDevice(address);
+        bus = I2CFactory.getInstance(I2CBus.BUS_1);
+        i2cIO = bus.getDevice(address);
         if(thisPin <= pinA7) {
           i2cIO.write(GpioA, (byte)0x0);// hack off for now
         } else {
