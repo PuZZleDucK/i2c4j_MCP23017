@@ -66,9 +66,9 @@ public class I2cLED implements AbstractPin{
   public void pulsePin(int duration, int pulseDelay) {
 //    currentState = true;
     if(thisPin <= pinA7) {
-      i2cIO.write(GpioA, bankA[0x0]);// all shutdown for now
+      i2cIO.write(GpioA, bankA[thisPin]);// bank A
     } else {
-      i2cIO.write(GpioB, bankB[0x0]);
+      i2cIO.write(GpioB, bankB[thisPin]);
     }
 
     Instant changeBack = Instant.now().plusNanos(duration);
@@ -84,15 +84,15 @@ public class I2cLED implements AbstractPin{
   }
 
   public boolean isOn() {
-//lying    return false;
+    return false;//lying
   }
 
   private class OffTask extends TimerTask {
     public void run() {
       if(thisPin <= pinA7) {
-        i2cIO.write(GpioA, bankA[thisPin]);// bankA
+        i2cIO.write(GpioA, 0x0);// hack off for now
       } else {
-        i2cIO.write(GpioB, bankB[thisPin]);
+        i2cIO.write(GpioB, 0x0);
       }
     }
   }
